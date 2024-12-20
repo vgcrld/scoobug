@@ -1,4 +1,4 @@
-package healpers
+package cfg
 
 // Version information
 const (

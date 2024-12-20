@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/vgcrld/scoobug/helpers"
+	"github.com/vgcrld/scoobug/cfg"
 )
 
 func main() {
-	fmt.Println("Hello, World!" + helpers.Version)
+	fmt.Printf("Hello, World! Date: %s, Version: %s\n", cfg.BuildDate, cfg.Version)
 }
