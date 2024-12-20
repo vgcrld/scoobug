@@ -14,7 +14,7 @@ func main() {
 		Commands: []*cli.Command{
 			{
 				Name:    "greet",
-				Aliases: []string{"g"},
+				Aliases: []string{"gr"},
 				Usage:   "Prints a greeting message",
 				Action: func(c *cli.Context) error {
 					fmt.Println("Hello, welcome to scoobug CLI!")
@@ -23,7 +23,7 @@ func main() {
 			},
 			{
 				Name:    "leave",
-				Aliases: []string{"l"},
+				Aliases: []string{"le"},
 				Usage:   "I'm out of here!",
 				Action: func(c *cli.Context) error {
 					fmt.Println("It's time to rolllllll.")
