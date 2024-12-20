@@ -8,4 +8,6 @@ import (
 
 func main() {
 	fmt.Printf("Hello, World! Date: %s, Version: %s\n", cfg.BuildDate, cfg.Version)
+	fmt.Print("This is the pool branch\n")
+
 }
