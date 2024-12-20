@@ -38,6 +38,8 @@ func measure(g geometry) {
 }
 
 func main() {
+
+	fmt.Println("This is from poop1 (base)")
 	r := rect{width: 3, height: 4}
 	c := circle{radius: 5}
 
