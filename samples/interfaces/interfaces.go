@@ -45,16 +45,23 @@ func (c circle) perim() float64 {
 
 // measure takes a geometry interface and prints its details, area, and perimeter.
 func measure(g geometry) {
-	fmt.Println(g)
-	fmt.Println(g.area())
-	fmt.Println(g.perim())
+	a := g.area()
+	p := g.perim()
+	switch g := g.(type) {
+	case rect:
+		fmt.Printf("Rectangle width(%v), hight(%v): area=%.2f, perim=%.2f\n", g.width, g.height, a, p)
+	case circle:
+		fmt.Printf("Circle radius(%v): area=%.2f, perim=%.2f\n", g.radius, a, p)
+	default:
+		fmt.Println("Unknown")
+	}
 }
 
 // main is the entry point of the program. It creates instances of rect and circle,
 // and then calls the measure function with these instances to demonstrate polymorphism
 // with interfaces.
 func main() {
-	r := rect{width: 3, height: 4}
+	r := rect{width: 3.1, height: 4}
 	c := circle{radius: 5}
 
 	measure(r)
