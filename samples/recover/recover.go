@@ -8,6 +8,8 @@ import (
 	"fmt"
 )
 
+// main is the entry point of the program. It demonstrates the use of recover to handle a panic
+// caused by a division by zero in the divideTwoNumbers function.
 func main() {
 	fmt.Println("Start of main function")
 	val := divideTwoNumbers(10, 0)
@@ -20,11 +22,12 @@ func main() {
 	fmt.Println(record)
 }
 
+// divideTwoNumbers divides two integers and returns a struct containing the result and any error message.
+// It uses defer and recover to handle a potential division by zero panic.
 func divideTwoNumbers(a, b int) (res struct {
 	err    string
 	result int
 }) {
-
 	defer func() {
 		rec := recover()
 		if rec != nil {

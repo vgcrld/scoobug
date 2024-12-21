@@ -1,5 +1,7 @@
 package cfg
 
+import "fmt"
+
 // create a person struct
 type Person struct {
 	Name string
@@ -14,4 +16,10 @@ func (p Person) GetName() string {
 // create a set name
 func (p *Person) SetName(name string) {
 	p.Name = name
+}
+
+// print this struct
+func (p Person) Print() {
+	fmt.Printf("Name: %s\n", p.Name)
+	fmt.Printf("Age: %d\n", p.Age)
 }
