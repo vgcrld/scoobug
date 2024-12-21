@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/urfave/cli/v2"
+	"github.com/vgcrld/scoobug/cfg"
 )
 
 func main() {
@@ -17,8 +18,18 @@ func main() {
 				Aliases: []string{"gr"},
 				Usage:   "Prints a greeting message",
 				Action: func(c *cli.Context) error {
-					fmt.Println("Hello, welcome to scoobug CLI!")
+					person := cfg.Person{}
+					person.SetName(c.String("name"))
+					fmt.Printf("Hello, %s!\n", person.GetName())
 					return nil
+				},
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:    "name",
+						Aliases: []string{"n"},
+						Value:   "stranger",
+						Usage:   "your name",
+					},
 				},
 			},
 			{
