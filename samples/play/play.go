@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	vgcrld "github.com/vgcrld/scoobug/cfg"
+)
 
 type base struct {
 	a int
@@ -12,6 +16,12 @@ type val struct {
 }
 
 func main() {
+
+	version := vgcrld.Version
+	buildDate := vgcrld.BuildDate
+	commitHash := vgcrld.CommitHash
+	fmt.Println("Version:", version, "\nBuild Date:", buildDate, "\nCommit Hash:", commitHash)
+
 	ff := val{
 		base: base{a: 1},
 		b:    "2",
