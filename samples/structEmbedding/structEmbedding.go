@@ -5,12 +5,11 @@ import "fmt"
 // base is a simple struct with a single field num.
 type base struct {
 	num int
-	age int
 }
 
 // describe returns a string representation of the base struct.
 func (b base) describe() string {
-	return fmt.Sprintf("base with num=%v, age=%v", b.num, b.age)
+	return fmt.Sprintf("base with num=%v", b.num)
 }
 
 // container embeds the base struct, meaning it inherits the fields and methods of base.
@@ -27,7 +26,6 @@ func main() {
 	co := container{
 		base: base{
 			num: 1,
-			age: 20,
 		},
 		str: "some name",
 	}
