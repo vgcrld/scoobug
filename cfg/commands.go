@@ -15,11 +15,11 @@ var App cli.App
 // this will init but panic. We will in fact return to main because we used recover()
 // in the myPanic() function.
 func init() {
-	l.Println("cfg:init():Starting init in cfg package")
-
-	l.Println("cfg:init():You realize you have to do this?")
+	l.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+	l.Println("Starting init in cfg package")
+	l.Println("You realize you have to do this?")
 	myPanic()
-	l.Println("cfg:init():Finished init in cfg package")
+	l.Println("Finished init in cfg package")
 }
 
 // You can only recover the panic in the same function.

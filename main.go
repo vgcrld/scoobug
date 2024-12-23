@@ -15,6 +15,9 @@ var l = log.New(os.Stderr, "main:", log.Ldate|log.Ltime|log.Lshortfile)
 
 func main() {
 
+	// set log debug level
+	l.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+
 	l.Println("Welcome...")
 
 	app := &cli.App{
