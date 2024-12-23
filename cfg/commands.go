@@ -8,18 +8,18 @@ import (
 )
 
 // Log to the screen
-var Log = log.New(os.Stderr, "cfg:", log.LstdFlags)
+var l = log.New(os.Stderr, "commands:", log.Ldate|log.Ltime|log.Lshortfile)
 
 var App cli.App
 
 // this will init but panic. We will in fact return to main because we used recover()
 // in the myPanic() function.
 func init() {
-	Log.Println("cfg:init():Starting init in cfg package")
+	l.Println("cfg:init():Starting init in cfg package")
 
-	Log.Println("cfg:init():You realize you have to do this?")
+	l.Println("cfg:init():You realize you have to do this?")
 	myPanic()
-	Log.Println("cfg:init():Finished init in cfg package")
+	l.Println("cfg:init():Finished init in cfg package")
 }
 
 // You can only recover the panic in the same function.
@@ -29,9 +29,9 @@ func init() {
 func myPanic() {
 	defer func() {
 		if r := recover(); r != nil {
-			log.Println("cfg:myPanic():Recovered in cfg package:", r)
+			l.Println("cfg:myPanic():Recovered in cfg package:", r)
 		}
 	}()
-	log.Println("cfg:myPanic():nope, gonna panic, bitch")
+	l.Println("gonna panic, bitch")
 	panic("Panicing in myPanic()")
 }
