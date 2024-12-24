@@ -10,6 +10,20 @@ import (
 	"strings"
 )
 
+// map[int]string of the status cods and thier meeting for the service now api
+var statusCodes = map[int]string{
+	200: "OK",
+	201: "Created",
+	204: "No Content",
+	400: "Bad Request",
+	401: "Unauthorized",
+	403: "Forbidden",
+	404: "Not Found",
+	405: "Method Not Allowed",
+	415: "Unsupported Media Type",
+	500: "Internal Server Error",
+}
+
 // creds struct contains the necessary credentials for authenticating with the
 type creds struct {
 	oauth_url    string
@@ -69,10 +83,13 @@ func main() {
 
 	l = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	accessTokens = getTokens(myCreds)
-	if accessTokens.Valid {
-		createIncident(*accessTokens, myCreds, snowReq)
-	} else {
-		l.Println("Token is invalid, code is: ", accessTokens.RequestCode)
+	// loop 4 times
+	for i := 0; i < 4; i++ {
+		if accessTokens.Valid {
+			createIncident(*accessTokens, myCreds, snowReq)
+		} else {
+			l.Println("Token is invalid, code is: ", accessTokens.RequestCode)
+		}
 	}
 
 }
@@ -86,6 +103,7 @@ func getTokens(c creds) *tokens {
 	req, _ := http.NewRequest("POST", c.oauth_url, payload)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	res, _ := http.DefaultClient.Do(req)
+	l.Println("Fetch tokens: ", statusCodes[res.StatusCode])
 	body, _ := io.ReadAll(res.Body)
 	var t tokens
 	json.Unmarshal(body, &t)
@@ -101,31 +119,17 @@ func getTokens(c creds) *tokens {
 }
 
 func createIncident(a tokens, c creds, snowReq map[string]string) {
-	l.Println("Creating incident")
 	parmsJson, _ := json.Marshal(snowReq)
 	parmsReader := strings.NewReader(string(parmsJson))
 	req, _ := http.NewRequest("POST", c.incident_url, parmsReader)
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer "+a.AccessToken)
-
-	// Log the request
-	l.Println("Request URL:", req.URL)
-	l.Println("Request Headers:", req.Header)
-	l.Println("Request Body:", string(parmsJson))
-
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		l.Println("Error making request:", err)
 		return
 	}
 	defer res.Body.Close()
-
-	// Log the response
-	body, _ := io.ReadAll(res.Body)
-	// l.Println("Response Status:", res.Status)
-	// l.Println("Response Headers:", res.Header)
-	l.Println("Response Body:", string(body))
-
-	fmt.Println("Status code:", res.StatusCode)
+	l.Println("Incident: ", statusCodes[res.StatusCode])
 }
