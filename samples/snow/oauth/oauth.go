@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -21,16 +22,21 @@ var l *log.Logger
 // main function
 func main() {
 
+	desc := flag.String("desc", "", "Description of the incident")
+	flag.Parse()
+	if *desc == "" {
+		fmt.Println("Description is required")
+		os.Exit(1)
+	}
 	l = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	c := helps.Creds{}
 	accessTokens = getTokens(c.GetCreds())
-	// loop 4 times
-	for i := 0; i < 4; i++ {
-		if accessTokens.Valid {
-			createIncident(*accessTokens, c.GetCreds(), helps.SnowReq)
-		} else {
-			l.Println("Token is invalid, code is: ", accessTokens.RequestCode)
-		}
+	sr := helps.SnowReq
+	sr["short_description"] = *desc
+	if accessTokens.Valid {
+		createIncident(*accessTokens, c.GetCreds(), sr)
+	} else {
+		l.Println("Token is invalid, code is: ", accessTokens.RequestCode)
 	}
 
 }
