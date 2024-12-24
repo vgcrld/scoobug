@@ -61,8 +61,8 @@ var snowReq = map[string]string{
 	"category":          "software",
 	"subcategory":       "os",
 	"assignment_group":  "software",
-// 	"assigned_to":       "admin",
-// }
+	// "assigned_to":       "admin",
+}
 
 // main function
 func main() {
