@@ -28,6 +28,8 @@ type tokens struct {
 	Scope        string `json:"scope"`
 	TokenType    string `json:"token_type"`
 	ExpiresIn    int    `json:"expires_in"`
+	Valid        bool
+	RequestCode  int
 }
 
 // used to hold the authentication token
@@ -38,22 +40,40 @@ var myCreds creds = creds{
 	oauth_url:    "https://dev256710.service-now.com//oauth_token.do",
 	incident_url: "https://dev256710.service-now.com/api/now/table/incident",
 	grantType:    "password",
-	clientID:     "180d976197a94fdfb978816336ed123c",
+	clientID:     "2eda594ac70345fc80a47c1e5b4c2424",
 	clientSecret: "controlm123",
 	username:     "admin",
 	password:     "KqdT2U2a%5EoR%2B",
+	// password is encoded and needs to be. (same issue nithila saw)
+	// the actual password is 'KqdT2U2a^oR+'  ^ and + are special characters and need to be encoded
 }
 
 // l is a logger
 var l *log.Logger
+
+// when creating this you have to be careful with the fields you are sending
+// it will trigger a business rule if you are not careful and fail with a 403
+// this failed on a 403 when trying to assign it to a user "admin"
+var snowReq = map[string]string{
+	"short_description": "This is a test incident",
+	"urgency":           "2",
+	"impact":            "2",
+	"category":          "software",
+	"subcategory":       "os",
+	"assignment_group":  "software",
+// 	"assigned_to":       "admin",
+// }
 
 // main function
 func main() {
 
 	l = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
 	accessTokens = getTokens(myCreds)
-	l.Println("Tokens aquired, will expire in", accessTokens.ExpiresIn, "seconds: ", accessTokens.AccessToken)
-	createIncident(*accessTokens, myCreds)
+	if accessTokens.Valid {
+		createIncident(*accessTokens, myCreds, snowReq)
+	} else {
+		l.Println("Token is invalid, code is: ", accessTokens.RequestCode)
+	}
 
 }
 
@@ -69,27 +89,43 @@ func getTokens(c creds) *tokens {
 	body, _ := io.ReadAll(res.Body)
 	var t tokens
 	json.Unmarshal(body, &t)
+	t.RequestCode = res.StatusCode
+	if res.StatusCode != 200 {
+		t.Valid = false
+	} else {
+		t.Valid = true
+
+	}
+
 	return &t
 }
 
-func createIncident(a tokens, c creds) {
-	//body of parms in json
-	parms := map[string]string{
-		"short_description": "This is a test incident",
-		"urgency":           "2",
-		"impact":            "2",
-		"category":          "software",
-		"subcategory":       "os",
-		"assignment_group":  "software",
-		"assigned_to":       "admin",
-	}
-	parmsJson, _ := json.Marshal(parms)
-	fmt.Println(string(parmsJson))
+func createIncident(a tokens, c creds, snowReq map[string]string) {
+	l.Println("Creating incident")
+	parmsJson, _ := json.Marshal(snowReq)
 	parmsReader := strings.NewReader(string(parmsJson))
 	req, _ := http.NewRequest("POST", c.incident_url, parmsReader)
+	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer "+a.AccessToken)
-	res, _ := http.DefaultClient.Do(req)
+
+	// Log the request
+	l.Println("Request URL:", req.URL)
+	l.Println("Request Headers:", req.Header)
+	l.Println("Request Body:", string(parmsJson))
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		l.Println("Error making request:", err)
+		return
+	}
+	defer res.Body.Close()
+
+	// Log the response
 	body, _ := io.ReadAll(res.Body)
-	fmt.Println(string(body))
+	// l.Println("Response Status:", res.Status)
+	// l.Println("Response Headers:", res.Header)
+	l.Println("Response Body:", string(body))
+
+	fmt.Println("Status code:", res.StatusCode)
 }
