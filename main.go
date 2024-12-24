@@ -1,26 +1,37 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 
+	// You can use _ to import a package without using it
+	// Then you can init stuff in the package with func init()
 	"github.com/urfave/cli/v2"
 	"github.com/vgcrld/scoobug/cfg"
+	_ "github.com/vgcrld/scoobug/other"
 )
 
+var l = log.New(os.Stderr, "main:", log.Ldate|log.Ltime|log.Lshortfile)
+
 func main() {
+
+	// set log debug level
+	l.SetFlags(log.Ldate | log.Ltime | log.Llongfile)
+
+	l.Println("Welcome...")
+
 	app := &cli.App{
 		Name:  "scoobug",
 		Usage: "A simple CLI app example",
 		Commands: []*cli.Command{
 			{
 				Name:    "greet",
-				Aliases: []string{"gr"},
+				Aliases: []string{"g"},
 				Usage:   "Prints a greeting message",
 				Action: func(c *cli.Context) error {
 					person := cfg.Person{}
 					person.SetName(c.String("name"))
-					fmt.Printf("Hello, %s!\n", person.GetName())
+					l.Printf("Hello, %s!\n", person.GetName())
 					return nil
 				},
 				Flags: []cli.Flag{
@@ -37,7 +48,7 @@ func main() {
 				Aliases: []string{"le"},
 				Usage:   "I'm out of here!",
 				Action: func(c *cli.Context) error {
-					fmt.Println("It's time to rolllllll.")
+					l.Println("It's time to rolllllll.")
 					return nil
 				},
 			},
@@ -46,6 +57,6 @@ func main() {
 
 	err := app.Run(os.Args)
 	if err != nil {
-		fmt.Println(err)
+		l.Println(err)
 	}
 }
