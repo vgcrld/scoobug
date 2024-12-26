@@ -34,8 +34,8 @@ func (c Creds) GetCreds() Creds {
 		ClientSecret: "controlm123",
 		Username:     "admin",
 		Password:     "KqdT2U2a%5EoR%2B",
-		// password is encoded and needs to be. (same issue nithila saw)
-		// the actual password is 'KqdT2U2a^oR+'  ^ and + are special characters and need to be encoded
+		// password is encoded and needs to be.
+		// the actual password has special chars '^' and '+' are special characters and need to be encoded
 	}
 }
 
