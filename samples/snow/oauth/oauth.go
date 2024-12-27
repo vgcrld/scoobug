@@ -47,7 +47,7 @@ func getTokens(c helps.Creds) *helps.Tokens {
 		c.GrantType, c.ClientID, c.ClientSecret, c.Username, c.Password,
 	)
 	payload := strings.NewReader(credsString)
-	req, _ := http.NewRequest("POST", c.Oauth_url, payload)
+	req, _ := http.NewRequest("POST", c.OauthUrl, payload)
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	res, _ := http.DefaultClient.Do(req)
 	l.Println("Fetch tokens: ", helps.StatusCodes[res.StatusCode])
@@ -68,7 +68,7 @@ func getTokens(c helps.Creds) *helps.Tokens {
 func createIncident(a helps.Tokens, c helps.Creds, snowReq map[string]string) {
 	parmsJson, _ := json.Marshal(snowReq)
 	parmsReader := strings.NewReader(string(parmsJson))
-	req, _ := http.NewRequest("POST", c.Incident_url, parmsReader)
+	req, _ := http.NewRequest("POST", c.IncidentUrl, parmsReader)
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer "+a.AccessToken)

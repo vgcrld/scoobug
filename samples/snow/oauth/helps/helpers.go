@@ -16,8 +16,8 @@ var StatusCodes = map[int]string{
 
 // creds struct contains the necessary credentials for authenticating with the
 type Creds struct {
-	Oauth_url    string
-	Incident_url string
+	OauthUrl     string
+	IncidentUrl  string
 	GrantType    string
 	ClientID     string
 	ClientSecret string
@@ -27,15 +27,13 @@ type Creds struct {
 
 func (c Creds) GetCreds() Creds {
 	return Creds{
-		Oauth_url:    "https://dev256710.service-now.com//oauth_token.do",
-		Incident_url: "https://dev256710.service-now.com/api/now/table/incident",
+		OauthUrl:     "https://dev256710.service-now.com//oauth_token.do",
+		IncidentUrl:  "https://dev256710.service-now.com/api/now/table/incident",
 		GrantType:    "password",
 		ClientID:     "2eda594ac70345fc80a47c1e5b4c2424",
 		ClientSecret: "controlm123",
-		Username:     "admin",
-		Password:     "KqdT2U2a%5EoR%2B",
-		// password is encoded and needs to be.
-		// the actual password has special chars '^' and '+' are special characters and need to be encoded
+		Username:     "sa-ctm",
+		Password:     "0X6]flZ]J07BN={pTN2{>u_kP",
 	}
 }
 
