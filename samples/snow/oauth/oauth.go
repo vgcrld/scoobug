@@ -1,6 +1,9 @@
 package main
+
 /*
-The program creates an incident in ServiceNow using OAuth authentication to obtain an access token and then sending the incident details via an HTTP POST request.
+	The program creates an incident in ServiceNow using OAuth authentication to obtain
+	an access token and then sending the incident details via an HTTP POST request.
+
 */
 import (
 	"encoding/json"
