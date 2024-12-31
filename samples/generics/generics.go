@@ -25,6 +25,8 @@ func main() {
 		SumIntsOrFloats(floats),
 	)
 
+	fmt.Println(sumDifferent(1, 2, 2.3, 212.232))
+	fmt.Println(sumDifferent(1, 2, 3, 4, 5, 6, 7, 8, 9))
 }
 
 // SumInts adds together the values of m.
@@ -53,4 +55,13 @@ func SumIntsOrFloats[K comparable, V int64 | float64](m map[K]V) V {
 		s += v
 	}
 	return s
+}
+
+// Here I am using the type parameter V to specify that the function can accept
+func sumDifferent[V int | int64 | float64](a ...V) V {
+	var c V
+	for _, v := range a {
+		c = c + v
+	}
+	return c
 }
