@@ -1,0 +1,43 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        // run the current file
+        {
+            "name": "Launch file",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${file}"
+        },
+        {
+            "name": "users.go",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "/home/ec2-user/code/scoobug/samples/snow/users/users.go",
+            "env": {
+                "BEARER_TOKEN": "WyIuBH9WUNcMVv054O6U8BCJGifKcO354ZvI8G7cHU1cs9IkxsCGuBeW7WLyNmeQcszvEHNKn48bCfKg6dKwPQ",
+            }
+        },
+        {
+            "name": "oauth_token.go",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "/home/ec2-user/code/scoobug/samples/snow/oauth_token/oauth_token.go",
+        },
+        {
+            "name": "all-users.go",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "/home/ec2-user/code/scoobug/samples/snow/all-users/all-users.go",
+            "env": {
+                "BEARER_TOKEN": "OY1BseqLglWJne26Is7XJ4C4-2-ub_fVVNbd-8L1yTUEpeZ3g_MsPD4jI-JlNey-hKzDtb7Jm74WB28FJhC4dg",
+            }
+        }
+    ]
+}
