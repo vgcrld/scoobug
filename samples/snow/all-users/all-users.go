@@ -35,7 +35,7 @@ func init() {
 func main() {
 
 	var response Response
-	var groups = make(map[string]int)
+	var groups = make(map[string][]string)
 	getGroups(&response, &groups)
 
 	file, err := os.Create("groups.csv")
@@ -46,14 +46,16 @@ func main() {
 
 	writer := io.Writer(file)
 	writer.Write([]byte("Group,UserCount\n"))
-	for group, count := range groups {
-		writer.Write([]byte(fmt.Sprintf("%s,%d\n", group, count)))
+	for group, names := range groups {
+		for _, name := range names {
+			writer.Write([]byte(fmt.Sprintf("%s,%s\n", group, name)))
+		}
 	}
 	log.Println("CSV file created successfully")
 
 }
 
-func getGroups(response *Response, groups *map[string]int) {
+func getGroups(response *Response, groups *map[string][]string) {
 	url := "https://dllgroupdevtst.service-now.com/api/now/table/sys_user_grmember?sysparm_display_value=true&sysparm_fields=user%2Cgroup&sysparm_exclude_reference_link=true&sysparm_limit=999999999"
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("Accept", "*/*")
@@ -75,13 +77,11 @@ func getGroups(response *Response, groups *map[string]int) {
 	addToResponse(response, groups)
 }
 
-func addToResponse(response *Response, groups *map[string]int) {
+func addToResponse(response *Response, groups *map[string][]string) {
 	for _, result := range response.Result {
 		g := result.Group
-		if (*groups)[g] == 0 {
-			(*groups)[g] = 0
-		}
-		(*groups)[g]++
+		u := result.User
+		(*groups)[g] = append((*groups)[g], u)
 	}
 
 }
