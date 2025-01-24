@@ -1,38 +1,75 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+	"strconv"
+)
 
+// Printer interface defines a method for printing
+type Printer interface {
+	String()
+}
+
+// Result struct holds three integers
 type Result struct {
-	Index1 int
-	Index2 int
-	Value  int
+	x int
+	y int
+	z int
 }
 
-func inspectSlice(nums []int, target int) (ret []Result) {
-	for i1, v1 := range nums {
-		for i2, v2 := range nums {
-			ret = append(ret, Result{i1, i2, v1 + v2})
-		}
-	}
-	return returnAnswer(ret, target)
+// String method prints the Result struct
+func (r Result) String() {
+	fmt.Printf("%d,%d\n", r.x, r.y)
 }
 
-func returnAnswer(r []Result, p int) (ret []Result) {
-
-	for _, res := range r {
-		if res.Value == p {
-			ret = append(ret, res)
-		}
-	}
-
-	return ret
-
-}
-
+// main function
 func main() {
 
-	xx := inspectSlice([]int{11, 2, 8, 4, 5, 6, 6}, 13)
+	if len(os.Args) < 2 {
+		fmt.Println("Usage: sums <number> [<num1> <num2> ...]")
+		os.Exit(1)
+	}
 
-	fmt.Println(xx)
+	pick, err := strconv.Atoi(os.Args[1])
+	if err != nil {
+		fmt.Println("Error converting pick number to integer:", err)
+		os.Exit(1)
+	}
 
+	os.Args = os.Args[1:]
+
+	nums := buildIt(getArgs(), pick)
+	for _, r := range nums {
+		r.String()
+	}
+
+}
+
+// getArgs returns a slice of integers from command line arguments
+func getArgs() []int {
+	args := os.Args[1:]
+	var intArgs []int
+	for _, arg := range args {
+		num, err := strconv.Atoi(arg)
+		if err != nil {
+			fmt.Println("Error converting argument to integer:", err)
+			os.Exit(1)
+		}
+		intArgs = append(intArgs, num)
+	}
+	return intArgs
+}
+
+// buildIt returns a slice of Result structs
+func buildIt(nums []int, pick int) (ret []Result) {
+	for i := 0; i < len(nums); i++ {
+		for j := i + 1; j < len(nums); j++ {
+			sum := nums[i] + nums[j]
+			if sum == pick {
+				ret = append(ret, Result{i, j, sum})
+			}
+		}
+	}
+	return ret
 }
