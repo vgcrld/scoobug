@@ -3,6 +3,7 @@ module github.com/vgcrld/scoobug
 go 1.22.7
 
 require (
+	github.com/davecgh/go-spew v1.1.1
 	github.com/openai/openai-go v0.1.0-alpha.43
 	github.com/urfave/cli/v2 v2.27.5
 )
