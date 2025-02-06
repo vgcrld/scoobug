@@ -2,10 +2,12 @@ package main
 
 import (
 	_ "embed"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 
 	"gopkg.in/yaml.v2"
@@ -17,6 +19,10 @@ var (
 	USERNAME      string
 	PASSWORD      string
 	GRANT_TYPE    string
+	SNOWURL       string
+
+	ACCESS_TOKEN  string
+	REFRESH_TOKEN string
 )
 
 type Config struct {
@@ -25,13 +31,23 @@ type Config struct {
 	Username     string `yaml:"username"`
 	Password     string `yaml:"password"`
 	GrantType    string `yaml:"grant_type"`
+	SnowUrl      string `yaml:"snow_url"`
 }
 
-//go:embed .config.tst.yaml
+type Response struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+//go:embed .config.yaml
 var configTstYaml string
+
+//go:embed .response.json
+var responseJson string
 
 func init() {
 
+	// Load config from YAML
 	var config Config
 	yaml.Unmarshal([]byte(configTstYaml), &config)
 	CLIENT_ID = config.ClientID
@@ -39,16 +55,22 @@ func init() {
 	USERNAME = config.Username
 	PASSWORD = config.Password
 	GRANT_TYPE = config.GrantType
+	SNOWURL = config.SnowUrl
+
+	// Load response from JSON
+	var response Response
+	json.Unmarshal([]byte(responseJson), &response)
+	ACCESS_TOKEN = response.AccessToken
+	REFRESH_TOKEN = response.RefreshToken
+
 }
 
 func main() {
 
-	snowUrl := "https://dllgroupdevtst.service-now.com/oauth_token.do"
-
 	encodeLoad := "grant_type=" + url.QueryEscape(GRANT_TYPE) + "&client_id=" + url.QueryEscape(CLIENT_ID) + "&client_secret=" + url.QueryEscape(CLIENT_SECRET) + "&username=" + url.QueryEscape(USERNAME) + "&password=" + url.QueryEscape(PASSWORD)
 	payload := strings.NewReader(encodeLoad)
 
-	req, _ := http.NewRequest("POST", snowUrl, payload)
+	req, _ := http.NewRequest("POST", SNOWURL, payload)
 
 	req.Header.Add("Accept", "*/*")
 	req.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -63,5 +85,16 @@ func main() {
 		return
 	}
 
-	fmt.Println(string(body))
+	writeResponseToFile(body)
+
+}
+
+func writeResponseToFile(body []byte) {
+	filePath := ".response.json"
+	err := os.WriteFile(filePath, body, 0644)
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return
+	}
+	fmt.Println("Response written to", filePath)
 }
