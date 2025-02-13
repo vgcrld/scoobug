@@ -13,16 +13,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/vgcrld/scoobug/samples/snow/helps"
 )
-
-type UserGroup struct {
-	User  string `json:"user"`
-	Group string `json:"group"`
-}
-
-type Response struct {
-	Result []UserGroup `json:"result"`
-}
 
 var BEARER_TOKEN string
 
@@ -34,7 +27,7 @@ func init() {
 
 func main() {
 
-	var response Response
+	var response helps.GroupResponse
 	var groups = make(map[string][]string)
 	getGroups(&response, &groups)
 
@@ -55,8 +48,8 @@ func main() {
 
 }
 
-func getGroups(response *Response, groups *map[string][]string) {
-	url := "https://dllgroupdevtst.service-now.com/api/now/table/sys_user_grmember?sysparm_display_value=true&sysparm_fields=user%2Cgroup&sysparm_exclude_reference_link=true&sysparm_limit=999999999"
+func getGroups(response *helps.GroupResponse, groups *map[string][]string) {
+	url := "https://dev256710.service-now.com/api/now/table/sys_user_grmember?sysparm_display_value=true&sysparm_fields=user%2Cgroup&sysparm_exclude_reference_link=true&sysparm_limit=999999999"
 	req, _ := http.NewRequest("GET", url, nil)
 	req.Header.Add("Accept", "*/*")
 	req.Header.Add("Authorization", "Bearer "+BEARER_TOKEN)
@@ -77,7 +70,7 @@ func getGroups(response *Response, groups *map[string][]string) {
 	addToResponse(response, groups)
 }
 
-func addToResponse(response *Response, groups *map[string][]string) {
+func addToResponse(response *helps.GroupResponse, groups *map[string][]string) {
 	for _, result := range response.Result {
 		g := result.Group
 		u := result.User

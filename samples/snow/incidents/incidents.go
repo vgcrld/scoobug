@@ -15,7 +15,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/vgcrld/scoobug/samples/snow/incidents/helps"
+	"github.com/vgcrld/scoobug/samples/snow/helps"
 )
 
 // used to hold the authentication token
@@ -26,6 +26,9 @@ var l *log.Logger
 
 // main function
 func main() {
+
+	resp, err := getJsonFromFile("../oauth_token/.response.json")
+	fmt.Println(resp, err)
 
 	desc := flag.String("desc", "", "Description of the incident")
 	flag.Parse()
@@ -44,6 +47,23 @@ func main() {
 		l.Println("Token is invalid, code is: ", accessTokens.RequestCode)
 	}
 
+}
+
+func getJsonFromFile(filePath string) (map[string]string, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	var data map[string]string
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&data)
+	if err != nil {
+		panic("can't get " + filePath + ":" + err.Error())
+	}
+
+	return data, nil
 }
 
 func getTokens(c helps.Creds) *helps.Tokens {
