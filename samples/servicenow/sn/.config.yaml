@@ -1,0 +1,8 @@
+---
+client_id: 5ddaf06dd1231210455e1f8e7cc461bf
+client_secret: controlm123
+username: sys_Controlm
+password: <b5r]OP)#?9VgyuPQuCbeZ(}JMy(QP[9s<]J5?S9[)-Z&zZ-U&k)Efj@Y@vDmxt!5>Btr9=_I&k&
+grant_type: password
+snow_oauth_url: https://dev265642.service-now.com/oauth_token.do
+snow_base_url: https://dev265642.service-now.com/

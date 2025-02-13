@@ -1,7 +1,27 @@
-package helps
+package sn
+
+import (
+	_ "embed"
+
+	"gopkg.in/yaml.v2"
+)
+
+//go:embed .config.yaml
+var configYaml string
+
+// the main config struct
+var Cfg Config
+
+// init function to load config and response
+func init() {
+
+	// Load config from YAML
+	yaml.Unmarshal([]byte(configYaml), &Cfg)
+
+}
 
 // map[int]string of the status cods and thier meeting for the service now api
-var StatusCodes = map[int]string{
+var HttpStatusCodes = map[int]string{
 	200: "OK",
 	201: "Created",
 	204: "No Content",
@@ -74,4 +94,28 @@ type IncidentResponse struct {
 		AssignmentGroup  string `json:"assignment_group"`
 		AssignedTo       string `json:"assigned_to"`
 	} `json:"result"`
+}
+
+type Config struct {
+	ClientID     string `yaml:"client_id"`
+	ClientSecret string `yaml:"client_secret"`
+	Username     string `yaml:"username"`
+	Password     string `yaml:"password"`
+	GrantType    string `yaml:"grant_type"`
+	SnowOauthUrl string `yaml:"snow_oauth_url"`
+	SnowBaseUrl  string `yaml:"snow_base_url"`
+}
+
+type Response struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+type UserGroup struct {
+	User  string `json:"user"`
+	Group string `json:"group"`
+}
+
+type GroupResponse struct {
+	Result []UserGroup `json:"result"`
 }
