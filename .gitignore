@@ -3,3 +3,4 @@ samples/timezones/.apikey
 samples/openai/OPENAI_API_KEY
 samples/snow/all-users/groups.csv
 samples/snow/users/groups.csv
+samples/openai/.key
